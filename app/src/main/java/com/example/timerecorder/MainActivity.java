@@ -1,8 +1,12 @@
 package com.example.timerecorder;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,10 +20,11 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button timeInButton, timeOutButton;
+    private Button timeInButton, timeOutButton, searchButton, showAllButton;
     private TextView recordTextView;
 
     @Override
@@ -30,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         timeInButton = findViewById(R.id.timeInButton);
         timeOutButton = findViewById(R.id.timeOutButton);
         recordTextView = findViewById(R.id.recordTextView);
+        searchButton = findViewById(R.id.searchButton);
+        showAllButton = findViewById(R.id.showAllButton);
 
         // Disable buttons if already clicked for the day
         disableButtonsIfClicked();
@@ -38,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 recordTime("Time In");
+                refreshData();
+                disableButtonsIfClicked();
             }
         });
 
@@ -45,11 +54,79 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 recordTime("Time Out");
+                refreshData();
+                disableButtonsIfClicked();
+            }
+        });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+
+        showAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayAllData();
             }
         });
 
         // Automatically display all data when the activity is created
         displayAllData();
+    }
+
+    private void refreshData() {
+        // Add logic to refresh data and update UI components
+        displayAllData();
+        // You can add more logic as needed for refreshing other components
+    }
+
+    private void showDatePickerDialog() {
+        // Get the current date to set as the initial date in the DatePickerDialog
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Create a DatePickerDialog to allow the user to pick a date
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Format the selected date
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                        Date selectedDate = new Date(year - 1900, month, dayOfMonth);
+
+                        // Display records for the selected date
+                        displayRecordsForDate(dateFormat.format(selectedDate));
+                    }
+                }, year, month, day);
+
+        // Show the DatePickerDialog
+        datePickerDialog.show();
+    }
+
+    private void displayRecordsForDate(String selectedDate) {
+        // Read all data and filter records for the selected date
+        String allData = readAllData();
+        StringBuilder filteredData = new StringBuilder();
+
+        String[] records = allData.split("-------------------------------");
+        for (String record : records) {
+            if (record.contains(selectedDate)) {
+                filteredData.append(record.trim()).append("\n-------------------------------\n");
+            }
+        }
+
+        // Display the filtered data
+        recordTextView.setText(filteredData.toString());
+    }
+
+    private void displayAllData() {
+        // Display all data
+        recordTextView.setText("All Data:\n" + readAllData());
     }
 
     private void disableButtonsIfClicked() {
@@ -63,8 +140,10 @@ public class MainActivity extends AppCompatActivity {
                 // Check if Time In or Time Out already recorded for today
                 if (line.contains("Time In") && line.contains(dateFormat.format(new Date()))) {
                     timeInButton.setEnabled(false);
+                    timeInButton.setBackgroundColor(getResources().getColor(R.color.gray));
                 } else if (line.contains("Time Out") && line.contains(dateFormat.format(new Date()))) {
                     timeOutButton.setEnabled(false);
+                    timeOutButton.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
             }
 
@@ -156,10 +235,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return data.toString();
-    }
-
-    private void displayAllData() {
-        // Automatically display all data when the activity is created
-        updateRecordTextView();
     }
 }

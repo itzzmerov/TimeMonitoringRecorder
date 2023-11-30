@@ -1,39 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="0dp"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/timeInButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Time In"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"/>
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp"
+        android:background="#E6D0A3">
 
-    <Button
-        android:id="@+id/timeOutButton"
-        android:layout_width="wrap_content"
+        <!-- Logo -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/time_recorder"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"/>
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Offline Time Monitoring Recorder"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:textColor="#333333"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Time Out"
-        android:layout_below="@id/timeInButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/>
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:backgroundTint="#000000"/>
+
+        <Button
+            android:id="@+id/showAllButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Show All"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="#000000"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <Button
+            android:id="@+id/timeInButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="100dp"
+            android:text="Time In"
+            android:backgroundTint="#F44336"
+            android:textColor="#292929"
+            android:textSize="20sp"/>
+
+        <Button
+            android:id="@+id/timeOutButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="100dp"
+            android:text="Time Out"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="#F44336"
+            android:textColor="#292929"
+            android:textSize="20sp"/>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/timeOutButton"
-        >
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="24dp">
+
         <TextView
             android:id="@+id/recordTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:fontFamily="monospace"/>
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/timeInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time In"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+    <Button
+        android:id="@+id/timeOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time Out"
+        android:layout_below="@id/timeInButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timeOutButton"
+        >
+        <TextView
+            android:id="@+id/recordTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"/>
+    </ScrollView>
+
+</RelativeLayout>

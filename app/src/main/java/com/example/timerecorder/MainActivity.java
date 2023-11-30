@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         timeInButton = findViewById(R.id.timeInButton);
         timeOutButton = findViewById(R.id.timeOutButton);
         recordTextView = findViewById(R.id.recordTextView);
+
+        // Disable buttons if already clicked for the day
+        disableButtonsIfClicked();
 
         timeInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,18 +52,53 @@ public class MainActivity extends AppCompatActivity {
         displayAllData();
     }
 
+    private void disableButtonsIfClicked() {
+        try {
+            String filename = "time_monitoring.txt";
+            BufferedReader br = new BufferedReader(new FileReader(getFilesDir() + "/" + filename));
+            String line;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+            while ((line = br.readLine()) != null) {
+                // Check if Time In or Time Out already recorded for today
+                if (line.contains("Time In") && line.contains(dateFormat.format(new Date()))) {
+                    timeInButton.setEnabled(false);
+                } else if (line.contains("Time Out") && line.contains(dateFormat.format(new Date()))) {
+                    timeOutButton.setEnabled(false);
+                }
+            }
+
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void recordTime(String eventType) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            String currentDate = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
             String currentTime = dateFormat.format(new Date());
 
             String record = eventType + ": " + currentTime + "\n";
+
+            // Check if it's a new day, add separator and date at the beginning
+            if (!readAllData().contains(currentDate)) {
+                record = "-------------------------------\n" + "Date: " + currentDate + "\n" + record;
+            }
 
             // Save to file
             saveToFile(record);
 
             // Update TextView
             updateRecordTextView();
+
+            // Disable the button after clicking
+            if (eventType.equals("Time In")) {
+                timeInButton.setEnabled(false);
+            } else if (eventType.equals("Time Out")) {
+                timeOutButton.setEnabled(false);
+            }
 
             // Show toast
             Toast.makeText(this, "Recorded successfully", Toast.LENGTH_SHORT).show();
